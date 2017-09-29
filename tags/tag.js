@@ -26,6 +26,7 @@ var Tags;
 			}
 			return TAG_CONFIG[attr];
 		};
+		//初始化
 		this.init = function(){
 			var _this = $(TAG_CONFIG[input-id]);
 			_this.attr('placeholder','最多输入'+TAG_CONFIG['max-tags']+'个标签');
