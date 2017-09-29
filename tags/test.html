@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<div class="words">
+    <div class="tags" id="tags"></div>
+    <div class="input">
+        <input type="text" value="" name="" id="input" placeholder="请输入关键词"/>
+        <ul></ul>
+    </div>
+</div>
+<style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .words {
+        width: 800px;
+        height: 32px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        margin: 50px auto;
+    }
+
+    .words .tags {
+        width: auto;
+        float: left;
+        height: 32px;
+        margin-right: 10px;
+    }
+
+    .words .tags .item {
+        width: auto;
+        height: 32px;
+        line-height: 32px;
+        display: block;
+        float: left;
+        padding: 0 20px 0 15px;
+        background: red;
+        border-radius: 4px;
+        margin-right: 5px;
+        position: relative;
+    }
+
+    .words .tags .item b {
+        color: #fff;
+        font-size: 14px;
+        font-weight: normal;
+        display: inline-block;
+    }
+
+    .words .tags .item i {
+        width: 14px;
+        height: 14px;
+        background: blue;
+        position: absolute;
+        top: 3px;
+        right: 3px;
+    }
+
+    .words .input {
+        width: 140px;
+        height: 32px;
+        float: left;
+        position: relative;
+    }
+
+    .words .input input {
+        border: 0;
+        height: 32px;
+        width: 140px;
+    }
+
+    .words ul {
+        display: none;
+        width: 200px;
+        height: auto;
+        padding: 5px 10px;
+        line-height: 20px;
+        border: 1px solid #ccc;
+        background: #fff;
+        box-shadow: 0 0 3px #eee;
+        position: absolute;
+        top: 32px;
+        left: 0;
+    }
+
+    .words ul li {
+        color: #333;
+        cursor: pointer;
+    }
+</style>
+<script type="text/javascript">
+
+    var tags = $("#tags");
+    var data = ["dstat", "DSpace", "DS-5", "DSPAM", "dScribe", "skl", "kss", "ab", "abc"]; // 模拟数据
+    var tempData = [], // 暂存数据
+        html = '', // html暂存数据
+        status = 0; // 状态
+
+    function clear() {
+        $("#input").val('');
+        ulHide();
+    }
+
+    function ulHide() {
+        $(".input ul").html("").hide();
+    }
+
+    function checkval(val) {
+        var s_status = true, size = $(tags).find('.item').size();
+        $(tags).find('.item').each(function () {
+            if (val == $(this).find("b").html()) s_status = false;
+        });
+        if (val.length <= 0) return false;
+        if (size > 4) {
+            alert("最多添加5条");
+            clear();
+            return false;
+        }
+        if (s_status !== false && val.length > 0) {
+            $(tags).append('<span class="item"><b>' + val + '</b><i class="clear"></i></span>');
+        } else {
+            alert("已经添加了");
+        }
+        clear();
+    }
+
+    $("#input").on("keyup", function (e) {
+
+        // 清除所有数据
+        ulHide();
+        tempData = [];
+        html = '';
+
+        //
+        var e = (e) ? e : window.event;
+        var val = $(this).val();
+        var len = $(this).val().length;
+
+        if (e.keyCode == 13 || e.keyCode == 188) {
+            val = e.keyCode == 188 ? val.substr(0, len - 1) : val;
+            checkval(val);
+        }else{
+            if (e.keyCode == 8 && status == 1) {
+                $(tags).find(".item:last").remove();
+            } else if (e.keyCode != 8) {
+                status = 0;
+            }
+            if (e.keyCode == 8 && val.length <= 0) {
+                status = 1;
+            } else {
+
+                    $.each(data, function (i) {
+                        var d = data[i].substr(0, len === 0 ? 1 : len);
+                        if (val == d) {
+                            tempData.push(data[i]);
+                        }
+                    });
+                    if (tempData.length > 0) {
+                        $.each(tempData, function (i) {
+                            html += ("<li>" + tempData[i] + "</li>");
+                        });
+                        $(".input ul").html(html).show();
+                    } else {
+                        ulHide();
+                    }
+
+            }
+        }
+
+    });
+
+    $(".input ul").on("click", "li", function () {
+        checkval($(this).html());
+    });
+
+    $(tags).on("click", "i.clear", function () {
+        $(this).parents(".item").remove();
+    });
+</script>
+</body>
+</html>

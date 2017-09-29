@@ -1,0 +1,12 @@
+<style type="text/css">
+		*{padding: 0; margin: 0; list-style: none;}
+		.words{ width: 800px; height: 32px; padding: 10px; border:1px solid #ddd; margin: 50px auto;}
+		.words .tags{width: auto; float: left;height: 32px; margin-right: 10px;}
+		.words .tags .item{ width: auto; height: 32px; line-height: 32px; display: block; float: left; padding: 0 20px 0 15px; background: red; border-radius:4px; margin-right: 5px; position: relative;}
+		.words .tags .item b{color:#fff; font-size: 14px; font-weight: normal; display:inline-block;}
+		.words .tags .item i{width: 14px; height: 14px; background:gray; position: absolute; top: 3px; right: 3px;line-height: 14px;}
+		.words .input{width: 140px; height: 32px; float: left; position: relative;}
+		.words .input input{ border:0;height: 32px; width: 140px;}
+		.words ul{ display:none; width: 200px; height: auto; padding:5px 10px; line-height: 20px; border:1px solid #ccc; background:#fff; box-shadow: 0 0 3px #eee; position: absolute; top: 32px; left:0;}
+		.words ul li{color: #333; cursor: pointer;}
+	</style>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>测试</title>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="./tag.css">
+</head>
+<body>
+	<div class="words">
+		<div class="tags" id="tags"></div>
+		<div class="input">
+			<input type="text" value="" name="" id="input" placeholder="请输入关键词" />
+			<ul></ul>
+		</div>
+		<button id='ssss'>1234</button>
+	</div>
+	<script type="text/javascript" src='./tags.config.js'></script>
+	<script type="text/javascript" src='./tag.js'></script>
+	<script type="text/javascript">
+
+
+		console.log(Tags)
+
+		var tags = $("#tags");
+		var data =  ["dstat", "DSpace", "DS-5", "DSPAM", "dScribe","skl","kss","ab","abc"];
+		var str = [];
+		var sting = '';
+		var status = 0;
+
+		$("#input").on("keyup",function(e){
+			var e = (e) ? e : window.event;
+			$(".input ul").html('').hide();
+			str = [],sting = '';
+			var val = $(this).val();
+			var len = $(this).val().length;
+			if(e.keyCode == 8 && status == 1){
+				$(tags).find(".item:last").remove();
+			}else if(e.keyCode != 8){
+				status = 0;
+			}
+
+			if(e.keyCode == 8 && val.length <= 0){
+				status = 1;
+			}else{
+				console.log(11);
+				$.each(data,function(i){
+					var d = data[i].substr(0,len==0?1:len);
+					if(val == d){
+						str.push(data[i]);
+					}		
+				})
+				if(str.length > 0){
+					$.each(str,function(i){
+						var s = "<li>"+str[i]+"</li>"
+						sting += s;
+					});
+					$(".input ul").html(sting).show();
+				}else{
+					$(".input ul").html('').hide();
+				}
+			}
+		})
+
+		$(".input ul").on("click","li",function(){
+			var val = $(this).html(),strue = true;
+			var html = '<span class="item"><b>'+val+'</b><i class="clear">&times;</i></span>';
+			$(tags).find('.item').each(function(index,el){
+				var v = $(this).find("b").html();
+				if(val == v){
+					strue = false;
+				}
+			});
+			if(strue !== false){
+				$(tags).append(html);			
+			}else{
+				var size = $(tags).find('.item').size();
+				if(size == 5){
+					alert("最多添加5条");
+				}else{
+					alert("已经添加了");
+				}
+			}
+			$(this).parent("ul").html("").hide();
+			$("#input").val('')
+		})
+
+		$(tags).on("click","i.clear",function(){
+			$(this).parents(".item").remove();
+		})
+
+		function test(){
+			$('#ssss').click(function(){
+				alert(1);
+			})
+		}
+	</script>
+</body>
+</html>
