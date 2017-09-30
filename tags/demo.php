@@ -25,9 +25,15 @@ $return = [];
 
 // fillter
 //The method is the same as in the config.js
+// if($_GET['tag_name'] == 's') {
+// 	echo json_encode(['code'=>0,'msg'=>1,'data'=>['a','b','c']]);
+// }else{
+// 	echo json_encode(['code'=>0,'msg'=>1,'data'=>['aa','bb','cc']]);
+// }
+
 
 if($_SERVER['REQUEST_METHOD'] === 'GET') {
-	$word = $_GET['word'];
+	$word = $_GET['tag_name'];
 	if(isset($lib[$word])) {
 		echo json_encode(['code' => 0, 'msg' => 'OK', 'data' => $lib[$word]]);
 	}
