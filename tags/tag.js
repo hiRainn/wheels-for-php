@@ -18,6 +18,7 @@ var Tags;
 		this.del_status = 0;
 		this.submit = 1;
 		this.fillter = 0;
+		this.li_pos = null;
 		this.config = function(attr='',set = '') {
 			if(typeof TAG_CONFIG[attr] == 'undefined') {
 				return false;
@@ -29,19 +30,25 @@ var Tags;
 			return TAG_CONFIG[attr];
 		};
 		//初始化
-		this.init = function(){
+		this.init = function(data = []){
 			this.initDom();
 			var input = $('#'+TAG_CONFIG['input-id']);
 			input.attr('placeholder','最多输入'+ TAG_CONFIG['max-tags'] +'个标签');
-
-			//×取消
-			input.on("click","i.clear",function(e){
-				$(this).parents(".item").remove();
-				this.tag_number --;
-				var e = (e) ? e : window.event;
-
-			})
-			this.tag_name = input.val();
+			if(data !== [] ) {
+				if(!(data instanceof Array)) {
+					this.error = 'error init data type';
+					return this.error;
+				}
+				if(data.length > TAG_CONFIG['max-tags']) {
+					this.error = 'out of data length';
+					return this.error;
+				}
+				for(var p in data){
+					this.tag_name = data[p];
+					this.addTag(data[p]);
+				}
+			}
+	
 			var _this = this;
 
 			this.bindFunc();
@@ -54,7 +61,8 @@ var Tags;
 				if (_this.tag_name != '') {
 
 					if(TAG_CONFIG['fillter']) {
-						_this.fillter(_this.tag_name);
+						var status = _this.fillter();
+						if(!status) return false;
 					}
 
 					_this.del_status = 0;
@@ -65,6 +73,8 @@ var Tags;
 						data : {tag_name : _this.tag_name},
 						dataType : 'json',
 						beforeSend : function() {
+							_this.return_tag = [];
+							_this.li_pos=null;
 							_this.ulHide();
 						},
 						success : function (res) {
@@ -76,7 +86,7 @@ var Tags;
 								return false;
 							}
 							for(var p in res.data) {
-								if(_this.return_tag.length > TAG_CONFIG['max-select']) {
+								if(_this.return_tag.length == TAG_CONFIG['max-select']) {
 									break;
 								}
 								_this.return_tag.push(res.data[p])
@@ -98,7 +108,6 @@ var Tags;
 			input.on('keydown',function(e){
 				var e = e || window.event;
 				//enter is 13 and , is 188
-
 				if(e.keyCode == 13 || e.keyCode == 188) {
 					if(_this.tag_name != false) {
 						_this.addTag(_this.tag_name);
@@ -111,6 +120,64 @@ var Tags;
 					if(_this.del_status == 1) {
 						_this.deleteTag();
 					}
+				}
+				//up
+				if(e.keyCode == 38) {
+					if(_this.return_tag.length === 0) {
+						return false;
+					}
+					var that;
+					if(_this.li_pos === null) {
+						that = $('#'+TAG_CONFIG['ul-id']).find('li').eq(_this.return_tag.length -1);
+						that.css('background','#CDC9C9').addClass(TAG_CONFIG['li-class-name']);
+						$('#'+TAG_CONFIG['input-id']).val(that.html());
+						_this.li_pos = _this.return_tag.length - 1;
+					}
+					else if(_this.li_pos === 0){
+						$('#'+TAG_CONFIG['ul-id']).find('li').eq(0).removeClass(TAG_CONFIG['li-class-name']).css('background','none');
+						that = $('#'+TAG_CONFIG['ul-id']).find('li').eq(_this.return_tag.length -1);
+						that.css('background','#CDC9C9').addClass(TAG_CONFIG['li-class-name']);
+						$('#'+TAG_CONFIG['input-id']).val(that.html());
+						_this.li_pos = _this.return_tag.length - 1;
+					}
+					else {
+						that = $('#'+TAG_CONFIG['ul-id']).find('li').eq(_this.li_pos - 1);
+						$('#'+TAG_CONFIG['ul-id']).find('li').eq(_this.li_pos).removeClass(TAG_CONFIG['li-class-name']).css('background','none');
+						that.css('background','#CDC9C9').addClass(TAG_CONFIG['li-class-name']);
+						$('#'+TAG_CONFIG['input-id']).val(that.html());
+						_this.li_pos --;
+					}
+					$('#'+TAG_CONFIG['input-id']).next('i').html('').hide();
+					_this.tag_name = that.html();
+				}
+				//down
+				if(e.keyCode == 40) {
+					if(_this.return_tag.length === 0) {
+						return false;
+					}	
+					var that;
+					if(_this.li_pos === null) {
+						that = $('#'+TAG_CONFIG['ul-id']).find('li').eq(0);
+						that.css('background','#CDC9C9').addClass(TAG_CONFIG['li-class-name']);
+						$('#'+TAG_CONFIG['input-id']).val(that.html());
+						_this.li_pos = 0;
+					}
+					else if(_this.li_pos === (_this.return_tag.length - 1)){
+						$('#'+TAG_CONFIG['ul-id']).find('li').eq(_this.return_tag.length - 1).removeClass(TAG_CONFIG['li-class-name']).css('background','none');
+						that = $('#'+TAG_CONFIG['ul-id']).find('li').eq(0);
+						that.css('background','#CDC9C9').addClass(TAG_CONFIG['li-class-name']);
+						$('#'+TAG_CONFIG['input-id']).val(that.html());
+						_this.li_pos = 0;
+					}
+					else {
+						that = $('#'+TAG_CONFIG['ul-id']).find('li').eq(_this.li_pos + 1);
+						$('#'+TAG_CONFIG['ul-id']).find('li').eq(_this.li_pos).removeClass(TAG_CONFIG['li-class-name']).css('background','none');
+						that.css('background','#CDC9C9').addClass(TAG_CONFIG['li-class-name']);
+						$('#'+TAG_CONFIG['input-id']).val(that.html());
+						_this.li_pos++;
+					}
+					$('#'+TAG_CONFIG['input-id']).next('i').html('').hide();
+					_this.tag_name = that.html();
 				}
 
 				if(TAG_CONFIG['strict-fillter']) {
@@ -185,8 +252,11 @@ var Tags;
 				this.ulHide();
 				$('#'+TAG_CONFIG['input-id']).val('');
 				$('#'+TAG_CONFIG['input-id']).attr('placeholder','还可以添加' + (parseInt(TAG_CONFIG['max-tags']) - this.tag_number) + '个标签');
+				if($('#'+TAG_CONFIG['input-id']).next('i').html('')!=false)
+				$('#'+TAG_CONFIG['input-id']).next('i').html('').hide();
 				this.tag_name = '';
 				this.del_status = 1;
+				this.li_pos = null;
 			}
 			else {
 				return false;
@@ -210,10 +280,14 @@ var Tags;
 			//edit class of li
 			var _this = this;
 			$('#'+TAG_CONFIG['ul-id']).on('mouseover','li',function(){
-				$(this).css('background','#eee');
+				if(!$(this).hasClass(TAG_CONFIG['li-class-name'])) {
+					$(this).css('background','#eee');
+				}	
 			})
 			$('#'+TAG_CONFIG['ul-id']).on('mouseout','li',function(){
-				$(this).css('background','#fff');
+				if(!$(this).hasClass(TAG_CONFIG['li-class-name'])) {
+					$(this).css('background','#fff');
+				}	
 			})
 			$('#'+TAG_CONFIG['ul-id']).on('click','li',function(){
 				_this.addTag($(this).html());
@@ -248,12 +322,12 @@ var Tags;
 					alert('请勿重复提交表单！')
 					return false;
 				}
-				$('#'+TAG_CONFIG['input-id']).val('');
+				$('#'+TAG_CONFIG['input-id']).attr('name','');
 				var input = document.createElement('input');
 				$(input).prop('hidden',true);
 				$(input).attr('name',TAG_CONFIG['input-name']);
 				// $(input).val(_this.tag_array.join(TAG_CONFIG['tag-join']));
-				$(input).attr('value','asdfsf');
+				$(input).attr('value',_this.tag_array.join(TAG_CONFIG['tag-join']));
 				$(this).append($(input));
 				_this.submit = 0;
 				// this.submit();
@@ -305,7 +379,19 @@ var Tags;
 		}
 
 		this.fillter = function() {
-			//fillter
+			var rule = this.config('allow-rule');
+			if(!rule.test(this.tag_name)) {
+				this.error = TAG_CONFIG['error-msg'];
+				$('#'+TAG_CONFIG['input-id']).next('i').html(this.error).show();
+				this.ulHide();
+				this.li_pos = null;
+				return false;
+			}
+			else{
+				this.error = ''
+				$('#'+TAG_CONFIG['input-id']).next('i').html('').hide();
+			}
+			return true;
 		}
 	}();
 })();

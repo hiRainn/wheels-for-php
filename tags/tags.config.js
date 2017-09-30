@@ -18,7 +18,8 @@
 		'span-color':'#FFF',
 		'span-mouse-over-color' : '#98FB98',
 		'tag-font':'sans-serif',
-		'allow-char': '',
+		'allow-rule': /^[\w\.]{1,20}$/,
+		'error-msg': 'dis-allow-rule',
 		'dis-allow-char': ['.','Process','+','=','(',')','*','&','%',' ','，','。'],
 	}
 })()
