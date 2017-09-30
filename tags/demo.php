@@ -38,7 +38,7 @@ if($_SERVER['REQUEST_METHOD'] === 'GET') {
 		echo json_encode(['code' => 0, 'msg' => 'OK', 'data' => $lib[$word]]);
 	}
 	else {
-		echo json_encode(['code' => 1, 'msg' => 'empty', 'data' => null]);
+		echo json_encode(['code' => 0, 'msg' => 'empty', 'data' => null]);
 	}
 }
 else {
