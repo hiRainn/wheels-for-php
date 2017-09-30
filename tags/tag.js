@@ -17,6 +17,7 @@ var Tags;
 		this.add_status = 1;
 		this.del_status = 0;
 		this.submit = 1;
+		this.fillter = 0;
 		this.config = function(attr='',set = '') {
 			if(typeof TAG_CONFIG[attr] == 'undefined') {
 				return false;
@@ -42,7 +43,6 @@ var Tags;
 			})
 			this.tag_name = input.val();
 			var _this = this;
-			
 
 			this.bindFunc();
 			input.bind('input onpropertychange',function(e){
@@ -98,6 +98,7 @@ var Tags;
 			input.on('keydown',function(e){
 				var e = e || window.event;
 				//enter is 13 and , is 188
+
 				if(e.keyCode == 13 || e.keyCode == 188) {
 					if(_this.tag_name != false) {
 						_this.addTag(_this.tag_name);
@@ -167,7 +168,7 @@ var Tags;
 			if(this.add_status == 1) {
 				var word = word;
 				var span_class = TAG_CONFIG['tag-span-class-name'];
-				span_style = "cursor:hand;border:1px solid "+ TAG_CONFIG['span-border-color'] +";padding:2px 9px;display:inline-block;border-radius:6px;background-color:" + TAG_CONFIG['span-color'] +";font-family:"+TAG_CONFIG['tag-font']+';margin:1px;'
+				span_style = "cursor:pointer;border:1px solid "+ TAG_CONFIG['span-border-color'] +";padding:2px 9px;display:inline-block;border-radius:6px;background-color:" + TAG_CONFIG['span-color'] +";font-family:"+TAG_CONFIG['tag-font']+';margin:1px;'
 				try{
 					html = `
 						<span class="${span_class}" style="${span_style}">
@@ -234,10 +235,10 @@ var Tags;
 			})
 
 			//mouseover span
-			$('#'+TAG_CONFIG['tag-div-id']).on('mouseover','span',function(){
+			$('#'+TAG_CONFIG['tag-div-id']).on('mouseover','.'+TAG_CONFIG['tag-span-class-name'],function(){
 				$(this).css('background',TAG_CONFIG['span-mouse-over-color']);
 			})
-			$('#'+TAG_CONFIG['tag-div-id']).on('mouseout','span',function(){
+			$('#'+TAG_CONFIG['tag-div-id']).on('mouseout','.'+TAG_CONFIG['tag-span-class-name'],function(){
 				$(this).css('background',TAG_CONFIG['span-color']);
 			})
 

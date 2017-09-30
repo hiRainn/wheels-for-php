@@ -13,12 +13,12 @@
 		'li-class-name': 'tag-on',
 		'tag-span-class-name': 'tag-items',
 		'strict-fillter': true,
-		'fillter' : false,
+		'fillter' : true,
 		'span-border-color': '#98FB98',
 		'span-color':'#FFF',
 		'span-mouse-over-color' : '#98FB98',
 		'tag-font':'sans-serif',
 		'allow-char': '',
-		'dis-allow-char': ['.','Process','+','=','(',')','*','&','%'],
+		'dis-allow-char': ['.','Process','+','=','(',')','*','&','%',' ','，','。'],
 	}
 })()
