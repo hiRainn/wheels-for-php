@@ -330,8 +330,8 @@ var Tags;
 				$(input).attr('value',_this.tag_array.join(TAG_CONFIG['tag-join']));
 				$(this).append($(input));
 				_this.submit = 0;
-				// this.submit();
-				return false;
+				this.submit();
+				// return false;
 			})
 		}
 
