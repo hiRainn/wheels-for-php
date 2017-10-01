@@ -11,7 +11,6 @@ var Tags;
 		this.tag_name = ''; //content of input
 		this.tag_array = [];
 		this.tag_number = 0; //current tag numbers
-		this.str_num = 0; 
 		this.return_tag = []; //返回的words结果
 		this.error = '';
 		this.add_status = 1;
@@ -24,10 +23,22 @@ var Tags;
 				return false;
 			}
 			if(attr == '') {
-				return TAG_CONFIG;
+				return false;
 			}
-			set == '' || (TAG_CONFIG[attr] = set);
-			return TAG_CONFIG[attr];
+			if(typeof set != 'string'){
+				return false;
+			}
+			if(typeof attr == 'string') {
+				set == '' || (TAG_CONFIG[attr] = set);
+				return TAG_CONFIG[attr];
+			}
+			else if(typeof attr == 'object' && attr instanceof Array != true){
+				for(var p in attr) {
+					TAG_CONFIG[p] = attr[p]
+				}
+				return false;
+			}
+			
 		};
 		//初始化
 		this.init = function(data = []){
@@ -180,13 +191,18 @@ var Tags;
 					_this.tag_name = that.html();
 				}
 
+				if(_this.tag_name.length == TAG_CONFIG['max-tag-length']) {
+					console.log(_this.tag_name.length +'-'+ TAG_CONFIG['max-tag-length']);
+					return false;
+				}
+
 				if(TAG_CONFIG['strict-fillter']) {
 					var status = 0;
 					try{
 						if($.inArray(e.key,TAG_CONFIG['dis-allow-char']) != -1) {
 							status = 1;
 						}
-					} catch(e) {
+					} catch(exception) {
 						for(var p in TAG_CONFIG['dis-allow-char']) {
 							if (e.key == TAG_CONFIG['dis-allow-char'][p]) {
 								status = 1;
