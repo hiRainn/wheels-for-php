@@ -41,12 +41,23 @@ var Tags;
 			
 		};
 		//初始化
-		this.init = function(data = []){
+		this.init = function(id = '',data = []){
+			if(id !== '') {
+				if(typeof id !== 'string' ) {
+					this.error = 'id type error!';
+					return this.error;
+				}
+				if(typeof $('#'+id)[0] === 'undefined'){
+					this.error = 'no id document exists';
+					return this.error;
+				}
+				this.config('input-id',id);
+			}
 			this.initDom();
 			var input = $('#'+TAG_CONFIG['input-id']);
 			input.attr('placeholder','最多输入'+ TAG_CONFIG['max-tags'] +'个标签');
 			if(data !== [] ) {
-				if(!(data instanceof Array)) {
+				if(data instanceof Array !== true) {
 					this.error = 'error init data type';
 					return this.error;
 				}

@@ -1,9 +1,8 @@
 <?php  
 /**
-* Analogue api of get tags
-* variables can be accepted there are a,ab,ad,ae,abc,ade,b,ba,bb,bd,bbc,bac,bde
+* 模拟标签内容获取接口
 * @author heihei <wr_sorarara@yahoo.co.jp>
-* @version 0.1 
+* @version 1.0 
 */
 
 $lib = [
@@ -24,13 +23,7 @@ $lib = [
 $return = [];
 
 // fillter
-//The method is the same as in the config.js
-// if($_GET['tag_name'] == 's') {
-// 	echo json_encode(['code'=>0,'msg'=>1,'data'=>['a','b','c']]);
-// }else{
-// 	echo json_encode(['code'=>0,'msg'=>1,'data'=>['aa','bb','cc']]);
-// }
-
+//接受方式为tags.config.js中的ajax-type，默认为GET
 
 if($_SERVER['REQUEST_METHOD'] === 'GET') {
 	$word = $_GET['tag_name'];

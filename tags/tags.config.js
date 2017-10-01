@@ -6,7 +6,7 @@
 		'input-div-id' : 'tag_input',     
 		'input-name':  'tags',
 		'tag-join': '-',
-		'tag-api':'./demo.php',    		 //url of api
+		'tag-api':'./ajax.php',    		 //url of api
 		'max-tags': 5,				     //max number of tags
 		'max-select' : 5,			     //max number of li
 		'max-tag-length': 20,            //
