@@ -1,15 +1,16 @@
 (function(){
 	window.TAG_CONFIG = {
-		'input-id' : 'input',
-		'ul-id' : 'tag_ul',
-		'tag-div-id' : 'tag-content',     //存放tags的id
-		'input-div-id' : 'input1',
+		'input-id' : 'input',			  //id of input
+		'ul-id' : 'tag_ul',				  //id of ul
+		'tag-div-id' : 'tag-content',     //id of div which 
+		'input-div-id' : 'tag_input',     
 		'input-name':  'tags',
 		'tag-join': '-',
-		'tag-api':'./demo.php',    //api获取地址
-		'max-tags': 5,				//最多选择几个标签
-		'max-select' : 5,			//最多几个候选词
-		'ajax-type' : 'GET',      //请求方式
+		'tag-api':'./demo.php',    		 //url of api
+		'max-tags': 5,				     //max number of tags
+		'max-select' : 5,			     //max number of li
+		'max-tag-length': 20,            //
+		'ajax-type' : 'GET',             //ajax method
 		'li-class-name': 'tag-on',
 		'tag-span-class-name': 'tag-items',
 		'strict-fillter': true,
