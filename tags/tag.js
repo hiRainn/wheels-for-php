@@ -1,32 +1,39 @@
 var Tags;
 (function(){
 	if(typeof $ == 'undefined' || typeof jQuery == 'undefined') {
-		alert('this tag tool based on jquery, require jquery first');
+		console.error('该Tag插件依赖jquery，请先引入jquery');
+		return false;
 	}
 	if(typeof TAG_CONFIG == 'undefined') {
-		alter('require tag.config.js');
+		console.error('请先引入tags.config.js');
+		return false;
 	}
 	
+	//实例化
 	Tags = new function(){
-		this.tag_name = ''; //content of input
-		this.tag_array = [];
-		this.tag_number = 0; //current tag numbers
+		this.tag_name = ''; //标签输入框中的内容
+		this.tag_array = []; //当前标签
+		this.tag_number = 0; //标签数
 		this.return_tag = []; //返回的words结果
-		this.error = '';
-		this.add_status = 1;
-		this.del_status = 0;
-		this.submit = 1;
-		this.fillter = 0;
-		this.li_pos = null;
+		this.error = '';   //错误信息
+		this.add_status = 1;  //添加状态 默认可添加
+		this.del_status = 0; //删除状态 默认不可删除
+		this.submit = 1;  //表单提交状态，默认可提交
+		this.fillter = 0; //过滤状态
+		this.li_pos = null; //上下选词li位置
+
+		//配置函数
 		this.config = function(attr='',set = '') {
 			if(typeof TAG_CONFIG[attr] == 'undefined') {
-				return false;
+				this.error ='配置属性不存在';
+				return this.error;
 			}
-			if(attr == '') {
-				return false;
+			if(attr == '' && set == '') {
+				return TAG_CONFIG;
 			}
 			if(typeof set != 'string'){
-				return false;
+				this.error = '设置内容格式错误';
+				return this.error;
 			}
 			if(typeof attr == 'string') {
 				set == '' || (TAG_CONFIG[attr] = set);
@@ -36,7 +43,7 @@ var Tags;
 				for(var p in attr) {
 					TAG_CONFIG[p] = attr[p]
 				}
-				return false;
+				return true;
 			}
 			
 		};
@@ -53,9 +60,18 @@ var Tags;
 				}
 				this.config('input-id',id);
 			}
+			if(typeof TAG_CONFIG['max-tags'] !== 'number'){
+				this.error = '最大标签数格式错误';
+				return this.error
+			}
 			this.initDom();
 			var input = $('#'+TAG_CONFIG['input-id']);
-			input.attr('placeholder','最多输入'+ TAG_CONFIG['max-tags'] +'个标签');
+			if(TAG_CONFIG['max-tags'] !== 0) {
+				input.attr('placeholder','最多输入'+ TAG_CONFIG['max-tags'] +'个标签');
+			}
+			else {
+				input.attr('placeholder','请输入标签');
+			}
 			if(data !== [] ) {
 				if(data instanceof Array !== true) {
 					this.error = 'error init data type';
@@ -75,13 +91,13 @@ var Tags;
 
 			this.bindFunc();
 			input.bind('input onpropertychange',function(e){
-				var e = e || window.event;
+				//监控input框实时变化
 				if ($('#'+TAG_CONFIG['input-id']).next('i').prop('hidden') == false ){
 					$('#'+TAG_CONFIG['input-id']).next('i').html('').hide();
 				}
 				_this.tag_name = input.val();
-				if (_this.tag_name != '') {
 
+				if (_this.tag_name != '') {
 					if(TAG_CONFIG['fillter']) {
 						var status = _this.fillter();
 						if(!status) return false;
@@ -118,7 +134,9 @@ var Tags;
 							_this.ulShow();
 						},
 						error : function () {
-							alert('system error,try again letter');
+							alert('ajax请求错误');
+							_this.error = 'ajax请求错误';
+							return _this.error;
 						}
 					})
 				}
@@ -127,6 +145,8 @@ var Tags;
 					_this.del_status = 1;
 				}
 			})
+
+			//增加标签，按逗号，回车，鼠标点击li时可添加标签，按上下键可选中li中已存在标签
 			input.on('keydown',function(e){
 				var e = e || window.event;
 				//enter is 13 and , is 188
@@ -207,6 +227,7 @@ var Tags;
 					return false;
 				}
 
+				//严格过滤模式，禁止字符无法输入，如@、￥,在配置文件中可添加
 				if(TAG_CONFIG['strict-fillter']) {
 					var status = 0;
 					try{
@@ -229,7 +250,7 @@ var Tags;
 		
 		};
 
-		//begin with creating a div and ul
+		//舒适化dom
 		this.initDom = function() {
 			$('#'+TAG_CONFIG['input-id']).before('<div id="' + TAG_CONFIG['tag-div-id'] +'"></div>');
 			$('#'+TAG_CONFIG['input-id']).before('<div id="' + TAG_CONFIG['input-div-id'] +'"></div>');
@@ -245,9 +266,10 @@ var Tags;
 			$('#'+TAG_CONFIG['input-id']).after('<i style="color:red";></i>');
 		}
 
+		//创建li
 		this.createLi = function(data) {
 			if((data instanceof Array) !== true) {
-				alert('数据返回格式错误!');
+				this.error = '数据返回格式错误!';
 				return false;
 			}
 			for(var p in data) {
@@ -258,6 +280,7 @@ var Tags;
 			}
 		}
 
+		//设置标签span
 		this.setWord = function(word) {
 			if(this.add_status == 1) {
 				var word = word;
@@ -278,7 +301,9 @@ var Tags;
 				this.tag_array.push(word);
 				this.ulHide();
 				$('#'+TAG_CONFIG['input-id']).val('');
-				$('#'+TAG_CONFIG['input-id']).attr('placeholder','还可以添加' + (parseInt(TAG_CONFIG['max-tags']) - this.tag_number) + '个标签');
+				if(TAG_CONFIG['max-tags'] !== 0){
+					$('#'+TAG_CONFIG['input-id']).attr('placeholder','还可以添加' + (parseInt(TAG_CONFIG['max-tags']) - this.tag_number) + '个标签');
+				}
 				if($('#'+TAG_CONFIG['input-id']).next('i').html('')!=false)
 				$('#'+TAG_CONFIG['input-id']).next('i').html('').hide();
 				this.tag_name = '';
@@ -291,18 +316,21 @@ var Tags;
 			
 		}
 
+		//隐藏ul
 		this.ulHide = function(){
 			$('#'+TAG_CONFIG['ul-id']).hide();
 			$('#'+TAG_CONFIG['ul-id']).html('');
 			this.return_tag = [];
 		}
 
+		//显示ul
 		this.ulShow = function(){
 			if(this.return_tag != false) {
 				$('#'+TAG_CONFIG['ul-id']).show();
 			}
 		}
 
+		//绑定监听事件
 		this.bindFunc = function() {
 			//edit class of li
 			var _this = this;
@@ -332,7 +360,9 @@ var Tags;
 				})
 				_this.tag_number --;
 				_this.add_status = 1;
-				$('#'+TAG_CONFIG['input-id']).attr('placeholder','还可以添加' + (parseInt(TAG_CONFIG['max-tags']) - _this.tag_number) + '个标签');
+				if(TAG_CONFIG['max-tags'] !== 0){
+					$('#'+TAG_CONFIG['input-id']).attr('placeholder','还可以添加' + (parseInt(TAG_CONFIG['max-tags']) - _this.tag_number) + '个标签');	
+				}
 			})
 
 			//mouseover span
@@ -362,6 +392,7 @@ var Tags;
 			})
 		}
 
+		//删除标签
 		this.deleteTag = function(){
 			if(this.tag_number == 0) {
 				return false;
@@ -378,8 +409,9 @@ var Tags;
 			}
 		}
 
+		//增加标签
 		this.addTag = function(word){
-			if(this.tag_number >= TAG_CONFIG['max-tags']) {
+			if(this.tag_number >= TAG_CONFIG['max-tags'] && TAG_CONFIG['max-tags'] !== 0) {
 				$('#'+TAG_CONFIG['input-id']).next('i').html('最多只能添加'+TAG_CONFIG['max-tags']+'个标签!').show();
 				this.add_status = 0;
 				return false;
@@ -405,6 +437,7 @@ var Tags;
 			this.setWord(word);
 		}
 
+		//过滤操作
 		this.fillter = function() {
 			var rule = this.config('allow-rule');
 			if(!rule.test(this.tag_name)) {
@@ -420,6 +453,25 @@ var Tags;
 			}
 			return true;
 		}
+
 	}();
+
+	//监控Tags对象error属性
+	Object.defineProperties(Tags,{
+		_error:{
+			value:'',
+			writable : true,
+		},
+		error:{
+			set:function(value){
+				this._error = value;
+				!value || console.error(this._error);  //error不为空的时候打印错误信息
+			},
+			get:function(){
+				return this._error;
+			}
+		}
+	})
 })();
+
 
