@@ -7,13 +7,9 @@
 </head>
 <body>
 <style type="text/css">
-	/*.on{
-		display: inline-block;
-		background: #eee;
-	}*/
 </style>
 	<form action="getData.php" method="post">
-		<input type="" name="" id="aaaa">
+		<input type="" name="" id="myTags">
 		<br>
 		<input type="submit" value="提交">
 	</form>
@@ -21,9 +17,7 @@
 	<script type="text/javascript" src='./tags.config.js'></script>
 	<script type="text/javascript" src='./tag.js'></script>
 	<script type="text/javascript">
-
-		
-		Tags.init('aaaa');
+		Tags.init('myTags',['标签1','标签2']);
 	</script>
 </body>
 </html>
