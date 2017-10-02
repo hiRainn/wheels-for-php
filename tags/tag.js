@@ -8,7 +8,7 @@ var Tags;
 		console.error('请先引入tags.config.js');
 		return false;
 	}
-	
+
 	//实例化
 	Tags = new function(){
 		this.tag_name = ''; //标签输入框中的内容
@@ -51,11 +51,11 @@ var Tags;
 		this.init = function(id = '',data = []){
 			if(id !== '') {
 				if(typeof id !== 'string' ) {
-					this.error = 'id type error!';
+					this.error = 'id类型错误';
 					return this.error;
 				}
 				if(typeof $('#'+id)[0] === 'undefined'){
-					this.error = 'no id document exists';
+					this.error = '不存在该id对应的dom';
 					return this.error;
 				}
 				this.config('input-id',id);
@@ -77,8 +77,8 @@ var Tags;
 					this.error = 'error init data type';
 					return this.error;
 				}
-				if(data.length > TAG_CONFIG['max-tags']) {
-					this.error = 'out of data length';
+				if(data.length > TAG_CONFIG['max-tags'] && TAG_CONFIG['max-tags'] !== 0) {
+					this.error = '初始化数组超过最大标签数';
 					return this.error;
 				}
 				for(var p in data){
