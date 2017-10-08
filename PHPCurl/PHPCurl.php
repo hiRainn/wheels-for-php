@@ -4,6 +4,7 @@
 * @author heihei <wr_sorarara@yahoo.cp.jp>
 * @version 1.0 
 */
+
 class PHPCurl
 {
 	//curl_init的句柄
@@ -25,7 +26,7 @@ class PHPCurl
 	//set_options参数
 	protected $options = [];
 	//允许访问的method
-	$this->allow_method = ['GET', 'POST', "PATCH", 'PUT'];
+	$allow_method = ['GET', 'POST', "PATCH", 'PUT'];
 	//单例实例化参数
 	protected static $instance = null;
 
