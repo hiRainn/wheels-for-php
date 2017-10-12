@@ -20,6 +20,7 @@ var Tags;
 		this.del_status = 0; //删除状态 默认不可删除
 		this.submit = 1;  //表单提交状态，默认可提交
 		this.fillter = 0; //过滤状态
+		this.ul_status = 1; //是否可显示ul框
 		this.li_pos = null; //上下选词li位置
 
 		//配置函数
@@ -90,6 +91,7 @@ var Tags;
 			var _this = this;
 
 			this.bindFunc();
+			var last_xhr; //定义最后一个xhr；
 			input.bind('input onpropertychange',function(e){
 				//监控input框实时变化
 				if ($('#'+TAG_CONFIG['input-id']).next('i').prop('hidden') == false ){
@@ -98,13 +100,14 @@ var Tags;
 				_this.tag_name = input.val();
 
 				if (_this.tag_name != '') {
+					this.ul_status = 1;
 					if(TAG_CONFIG['fillter']) {
 						var status = _this.fillter();
 						if(!status) return false;
 					}
 
 					_this.del_status = 0;
-					$.ajax({
+					var xhr = $.ajax({
 						url : TAG_CONFIG['tag-api'],
 						type : TAG_CONFIG['ajax-type'],
 						async : true,
@@ -116,6 +119,11 @@ var Tags;
 							_this.ulHide();
 						},
 						success : function (res) {
+							//避免前面的xhr未执行完而报错
+							if(last_xhr.readyState != 4) {
+								return false;
+							}
+							res = last_xhr.responseJSON;
 							if(res.code != 0) {
 								alert(res.msg)
 								return false;
@@ -139,6 +147,7 @@ var Tags;
 							return _this.error;
 						}
 					})
+					last_xhr = xhr;
 				}
 				else {
 					_this.ulHide();
@@ -309,6 +318,7 @@ var Tags;
 				this.tag_name = '';
 				this.del_status = 1;
 				this.li_pos = null;
+				this.ul_status = 0;
 			}
 			else {
 				return false;
@@ -328,6 +338,7 @@ var Tags;
 			if(this.return_tag != false) {
 				$('#'+TAG_CONFIG['ul-id']).show();
 			}
+			this.ul_status = 0;
 		}
 
 		//绑定监听事件
