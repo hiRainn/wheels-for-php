@@ -13,6 +13,8 @@ class PHPCurl
 	protected $multi = false;
 	//批处理时的句柄
 	protected $multi_handle;
+	//是否是SSL请求
+	protected $is_ssl = false;
 	//header
 	protected $header = [];
 	//返回结果是否执行
@@ -26,12 +28,14 @@ class PHPCurl
 	//set_options参数
 	protected $options = [];
 	//允许访问的method
-	$allow_method = ['GET', 'POST', "PATCH", 'PUT'];
+	protected $allow_method = ['GET', 'POST', "PATCH", 'PUT'];
 	//单例实例化参数
 	protected static $instance = null;
 
-	private function __construct(string $url, string $method = 'GET', Array $options = []);
+	private function __construct(string $url, string $method = 'GET', Array $options = [])
 	{
+		//定义错误处理
+		set_exception_handler([$this,'CurlException']);
 		if(get_extension_funcs('curl') === false ){
 			$this->error = '未安装curl扩展';
 		}
@@ -112,6 +116,11 @@ class PHPCurl
 		else {
 			curl_close($this->handle);
 		}
+	}
+
+	public function CurlException($exception)
+	{
+		echo $exception->getMessage();
 	}
 }
 
