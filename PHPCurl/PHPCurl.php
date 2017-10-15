@@ -46,6 +46,7 @@ class PHPCurl
 		$this->url = $url;
 		$this->method = in_array($method, $this->allow_method)?$method:null;
 		$this->options = $options;
+		$this->handle = curl_init();
 	}
 
 	//出现错误的时候抛出异常
@@ -60,6 +61,12 @@ class PHPCurl
 	//析构方法，脚本中止的时候销毁资源
 	public function __destruct() 
 	{
+		if($this->multi) {
+			curl_multi_close($this->multi_handle);
+		}
+		else {
+			curl_close($this->handle);
+		}
 		self::$instance = null;
 	}
 
@@ -82,12 +89,13 @@ class PHPCurl
 		return $this;
 	}
 
-	protected function header($key,string $value = ''):self
+	public function header(array $options):self
 	{
-		if($key == false) {
+		if($options == false) {
 			$this->error = 'header 参数不能为空值';
 		}
-		if(gettype($key) === 'string') 1;
+		$this->options = $options;
+		return $this;
 	}
 
 	protected function multi(bollean $bool):self
@@ -107,14 +115,24 @@ class PHPCurl
 		return $this;
 	}
 
-	protected function run()
+	public function setUrl(string $url):self
 	{
+		$this->url = $url;
+		return $this;
+	}
 
+	public function run()
+	{
 		if($this->multi) {
-			curl_multi_close($this->multi_handle);
+			
 		}
 		else {
-			curl_close($this->handle);
+			curl_setopt($this->handle, CURLOPT_URL, $this->url);
+			curl_setopt($this->handle, CURLOPT_HEADER, $this->options);
+			if($this->exec === false) {
+				curl_setopt($this->handle,CURLOPT_RETURNTRANSFER,1);
+			}
+			return curl_exec($this->handle);
 		}
 	}
 
@@ -124,7 +142,31 @@ class PHPCurl
 	}
 }
 
-$a = PHPCurl::instance('www.baidu.com');
+$book = "http://www.qu.la/book/2610/";
+$first = '1436234.html';
+$preg = '/<a id="pager_next" href=\"(.*?)\".*?>(.*?)<\/a>/i';
+$preg1 = "/<h1>(.*?)<\/h1>/i";
+
+$headers[] = 'X-Apple-Tz: 0';
+$headers[] = 'X-Apple-Store-Front: 143444,12';
+$headers[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
+$headers[] = 'Accept-Encoding: gzip, deflate';
+$headers[] = 'Accept-Language: en-US,en;q=0.5';
+$headers[] = 'Cache-Control: no-cache';
+$headers[] = 'Content-Type: application/x-www-form-urlencoded; charset=utf-8';
+$headers[] = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:28.0) Gecko/20100101 Firefox/28.0';
+$headers[] = 'X-MicrosoftAjax: Delta=true';
+$a = PHPCurl::instance($book . $first)->header($headers);
+do{
+	$text = $a->run();
+	echo $text;
+	preg_match($preg, $text, $match);
+	preg_match($preg1, $text, $matc);
+	print_r( $match);
+	echo PHP_EOL;
+	$a->setUrl($book.$match[1]);
+}while($match != false)
+
 
 
 ?>
