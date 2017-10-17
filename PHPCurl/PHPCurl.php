@@ -34,8 +34,6 @@ class PHPCurl
 
 	private function __construct(string $url, string $method = 'GET', Array $options = [])
 	{
-		//定义错误处理
-		set_exception_handler([$this,'CurlException']);
 		if(get_extension_funcs('curl') === false ){
 			$this->error = '未安装curl扩展';
 		}
@@ -52,6 +50,8 @@ class PHPCurl
 	//出现错误的时候抛出异常
 	public function __set(string $param, $value)
 	{
+		//定义错误处理
+		set_exception_handler([$this,'CurlException']);
 		if($param === 'error') {
 			$this->error = $value;
 			throw new Exception($this->error, 1);
