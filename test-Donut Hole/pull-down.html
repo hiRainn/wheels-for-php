@@ -1,0 +1,47 @@
+<script type="text/javascript" src="jquery-3.1.1.min.js" ></script>
+<script>
+	$(function(){
+		var page = 1;
+		var scroll = $(".container-wrapper");
+		checkScroll(scroll.scrollTop(),scroll.height(),scroll[0].scrollHeight);
+		//上拉加载
+		scroll.on("scroll",function(){
+			checkScroll($(this).scrollTop(),$(this).height(),$(this)[0].scrollHeight);
+		});
+		
+		//判断是否需要ajax数据
+		var isRun = false;
+		
+		function checkScroll(scrollTop,clientHeight,scrollHeight){
+			if(isRun) return "已经在加载数据";
+			if(scrollTop + clientHeight + 100 > scrollHeight) {
+				//关闭拿ajax数据入口
+				isRun = true;
+				//进行ajax拿数据
+				page += 1;
+				
+				$.post('<?php echo Yii::app()->urlManager->createUrl('Index/index');?>/page/'+page,{'request':'wap'},function(data){
+					data = eval('('+ data +')');
+					if(data.length > 0){
+						var html = '';
+						$.each(data,function(k,v){
+							html += '<a class="box-cells box-flex-wrapper" href="<?php echo Yii::app()->urlManager->createUrl('News/index');?>/id/'+ v.id +'">';
+							html += '<div class="box-cell flex0">'+ v.time +'</div>';
+							html += '<div class="box-cell flex1 content">'+ v.title +'</div>';
+							html += '<div class="box-cell flex0 box-right-icon"><i class="icon-right-jiantou"></i></div>';
+							html += '</a>';
+						});
+						$("#news").append(html);
+						
+						//ajax完成 允许再次拿ajax数据
+						isRun = false;
+						checkScroll(scroll.scrollTop(),scroll.height(),scroll[0].scrollHeight);
+					}else{
+						toast('所有新闻已读取完毕');
+						isRun = true;
+					}
+				});
+			}
+		}
+});
+</script>
