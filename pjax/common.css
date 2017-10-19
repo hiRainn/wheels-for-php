@@ -1,0 +1,9 @@
+header{margin: 2px auto;border: 1px solid black;}
+header h2{display: inline-block;margin: 1px auto;}
+footer{margin: 2px auto;border: 1px solid black;}
+footer h2{display: inline-block;margin: 1px auto;}
+#container{width: 600px;margin: 1px auto;}
+#container table{border:1px solid black;border-collapse: collapse;}
+#container table th{border: 1px solid black;}
+#container a {margin: 5px;display: inline-block;border:1px solid #BBB;text-decoration: none;}
+#container .on{ background: #CBD; }
