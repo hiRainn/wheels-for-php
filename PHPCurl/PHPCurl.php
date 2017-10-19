@@ -147,15 +147,16 @@ $first = '1436234.html';
 $preg = '/<a id="pager_next" href=\"(.*?)\".*?>(.*?)<\/a>/i';
 $preg1 = "/<h1>(.*?)<\/h1>/i";
 
-$headers[] = 'X-Apple-Tz: 0';
-$headers[] = 'X-Apple-Store-Front: 143444,12';
-$headers[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
-$headers[] = 'Accept-Encoding: gzip, deflate';
-$headers[] = 'Accept-Language: en-US,en;q=0.5';
-$headers[] = 'Cache-Control: no-cache';
-$headers[] = 'Content-Type: application/x-www-form-urlencoded; charset=utf-8';
-$headers[] = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:28.0) Gecko/20100101 Firefox/28.0';
-$headers[] = 'X-MicrosoftAjax: Delta=true';
+// $headers[] = 'X-Apple-Tz: 0';
+// $headers[] = 'X-Apple-Store-Front: 143444,12';
+// $headers[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
+// $headers[] = 'Accept-Encoding: gzip, deflate';
+// $headers[] = 'Accept-Language: en-US,en;q=0.5';
+// $headers[] = 'Cache-Control: no-cache';
+// $headers[] = 'Content-Type: application/x-www-form-urlencoded; charset=utf-8';
+// $headers[] = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:28.0) Gecko/20100101 Firefox/28.0';
+// $headers[] = 'X-MicrosoftAjax: Delta=true';
+
 $a = PHPCurl::instance($book . $first)->header($headers);
 do{
 	$text = $a->run();
