@@ -4,6 +4,8 @@
 
 #### tags -- 一套简易的生成文章标签的js插件
 
+#### pjax -- 基于jquery的pjax应用demo
+
 #### PHPCurl -- 轻量级的curl请求工具，开发中
 
 #### pull-down  -- 无限下拉js
