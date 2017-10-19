@@ -1,0 +1,21 @@
+<div id="container">
+	<?php 
+		echo "<table>";
+		echo 	"<caption>pjax-demo</caption>";
+		echo	"<tr><th>姓名</th><th>年龄</th><th>职业</th></tr>";
+		foreach($data as $v) {  
+			echo	"<tr><th>{$v['name']}</th><th>{$v['age']}</th><th>{$v['job']}</th></tr>";
+		}
+		echo "</table>";
+		echo "<br>";
+
+		foreach($page as $k => $v1) {
+			if($v1 == $p) {
+				echo "<a href='?page=$v1' class=on>第$page[$k]页</a>";
+			}
+			else {
+				echo "<a href='?page=$v1'>第$page[$k]页</a>";
+			}
+		}
+	?>
+</div>
