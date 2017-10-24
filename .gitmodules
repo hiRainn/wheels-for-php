@@ -1,0 +1,3 @@
+[submodule "pmd/thinkphp"]
+	path = pmd/thinkphp
+	url = ../../top-think/framework
