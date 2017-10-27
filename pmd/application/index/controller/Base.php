@@ -60,7 +60,7 @@ class Base extends Controller
     	}
     	$this->assign([
     		'database'=>!empty($this->database)?$this->database:'',
-    		'databases' => $data
+    		'databases' => $data?$data:''
     	]);
     }
 
