@@ -1,0 +1,7 @@
+<header>
+	<div class="col-mg-12" id="header">
+		
+		<a class="btn btn-default dropdown-toggle database" href="{:url('index/tables',['database'=>$database])}" v-if="database != ''">{{database}}</a>
+		<a class="btn btn-default dropdown-toggle database right" href="{:url('sign/logout')}">退出</a>	
+	</div>
+</header>

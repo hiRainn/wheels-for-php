@@ -1,0 +1,10 @@
+header { float:left;height : 60px;background: #4d4d4d;width: 100%}
+header div{display: inline-block;float: left;margin: 7px 15px;}
+.database{display: inline-block;float: right;margin: 7px 15px;}
+.left{float:left; border:1px solid #000; width: 150px;height: 100% !important;background: #4d4d4d }
+.left ul{padding: 10px 0px;}
+.left ul li{width: 100%;}
+.left ul li a{width: 100%; margin-top: 3px;}
+.fight{float: right !important;}
+.container{float: left;}
+.clear{clear: both;}
