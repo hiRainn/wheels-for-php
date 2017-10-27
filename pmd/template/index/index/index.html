@@ -1,0 +1,35 @@
+{extend name="public:base"}
+{block name="main"}
+	<div id='app'>
+		<p>{{message}}</p>
+		<button v-on:click='test'>{{button}}</button>
+		<div v-html="rawHtml"></div	
+	</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+	var vm = new Vue({
+		el:"#app",
+		data:{
+			message:'hello vue!',
+			button:'click me!',
+			msg:"change it!",
+			rawHtml:`<button v-on:click='hhh'>12345</button>`,
+		},
+		methods:{
+			test(){
+				this.message = this.msg
+			},
+			hhh(){
+				alert(this.message)
+			}
+		},
+		beforeCreate(){
+			alert(111)
+		},
+		created(){
+			alert(this.button)
+		}
+	})
+</script>
+{/block}

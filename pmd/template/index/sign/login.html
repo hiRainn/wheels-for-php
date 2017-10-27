@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Login In</title>
+<meta charset="UTF-8" />
+<meta name="Author" content="heihei">
+<link rel="stylesheet" type="text/css" href="__CSS__/reset.css">
+<link rel="stylesheet" type="text/css" href="__CSS__/structure.css">
+</head>
+
+<body>
+<form class="box login">
+	<fieldset class="boxBody">
+	  <label>Hostname</label>
+	  <input type="text" tabindex="1" placeholder="Hostname" name="hostname" required>
+	  <label>Port</label>
+	  <input type="text" tabindex="1" placeholder="3306" name="port">
+	  <label>Username</label>
+	  <input type="text" tabindex="1" placeholder="username" name="username" required>
+	  <label>Password</label>
+	  <input type="password" tabindex="2"  name="password" required>
+	</fieldset>
+	<footer>
+	  <label><input type="checkbox" id="remember" tabindex="3">remember me</label>
+	  <input type="button" class="btnLogin" value="Login" tabindex="4">
+	</footer>
+</form>
+<footer id="main">
+  <a href="https://github.com/hiRainn/wheels-for-php">支持请给个star</a> | <a href="#">code by heihei</a>
+</footer>
+</body>
+<script src="__JS__/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		if(window.localStorage.getItem('hostname') != false) {
+			$('#remember').attr('checked',true)
+			$("input[name='hostname']").val(window.localStorage.getItem('hostname'));
+			$("input[name='port']").val(window.localStorage.getItem('port'));
+			$("input[name='username']").val(window.localStorage.getItem('username'));
+			$("input[name='password']").val(window.localStorage.getItem('password'));
+		}
+		$('.btnLogin').on('click',function(){
+			var data = {
+				hostname :$("input[name='hostname']").val(),
+				hostport :$("input[name='port']").val()?$("input[name='port']").val():3306,
+				username :$("input[name='username']").val(),
+				password :$("input[name='password']").val(),
+			}
+			var url = "{:url('index/sign/log_in')}";
+			$.post(url,data,function(res){
+				if(res.code != 0) {
+					alert(res.msg);
+					return false;
+				}
+				if(!$('#remember').get(0).checked) {
+					window.localStorage.clear();
+				}
+				else {
+					if(window.localStorage.getItem('hostname') == false) {
+						window.localStorage.setItem('hostname' ,data.hostname);
+						window.localStorage.setItem('port' ,data.hostport);
+						window.localStorage.setItem('username' ,data.username);
+						window.localStorage.setItem('password' ,data.password);
+					}
+				}
+				alert('登录成功！')
+				location.href="{:url('index/index/index')}"
+			},'json')
+			return false;
+		})
+	})
+</script>
+</html>
