@@ -1,0 +1,27 @@
+{extend name="public:base"}
+{block name="main"}
+	<div id='app'>
+		<table class="table table-bordered .col-xs-12">
+			<thead>
+				<th>字段名</th>
+				<th>数据类型</th>
+				<th>是否null</th>
+				<th>默认值</th>
+				<th>索引</th>
+				<th>注释</th>
+			</thead>
+			<tbody>
+				{volist name="detail" id="d"}
+					<tr>
+						<th>{$d.col_name}</th>
+						<th>{$d.data_type}</th>
+						<th>{$d.is_null}</th>
+						<th>{$d.default_data}</th>
+						<th>{$d.index_key}</th>
+						<th>{$d.col_comment}</th>
+					</tr>
+				{/volist}
+			</tbody>
+		</table>
+	</div>
+{/block}

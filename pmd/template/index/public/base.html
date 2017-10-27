@@ -12,9 +12,27 @@
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <body>
     {include file="public:header"}
-    <div class="main">
+    <div class="clear"></div>
+    <div class="left center-block">
+    	{block name="left"}
+    		<ul>
+				{volist name='databases' id='d'}
+					<li style="list-style: none;"><a class="btn btn-default" href="{:url('index/index/tables',['database'=>$d])}">{$d}</a></li>
+				{/volist}
+    		</ul>
+    	{/block}
+    </div>
+    <div class="container">
         {block name="main"}{/block}
     </div>
 </body>
 {block name="js"}{/block}
+<script type="text/javascript">
+	var app = new Vue({
+		el:'#header',
+		data:{
+			database:'{$database}',
+		}
+	})
+</script>
 </html>

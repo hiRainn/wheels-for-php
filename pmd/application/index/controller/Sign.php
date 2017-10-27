@@ -3,17 +3,24 @@ namespace app\index\controller;
 use think\Controller;
 use think\Db;
 use think\Request;
-use app\index\controller\MyMyConst;
+use app\index\controller\MyConst;
 
 class Sign extends Controller
 {
+
+	public function _initialize()
+	{
+		if(!in_array('PDO', get_loaded_extensions())){
+    		exit('必须安装PDO扩展');
+    	}
+	}
 	
 	/**
 	* 登录
 	*/
     public function login()
     {
-    	if(session(MyConst::SESSION)) {
+    	if(session(MyConst::SESSION)){
     		$this->redirect('index/index');
     	}
        return $this->fetch();
@@ -24,7 +31,7 @@ class Sign extends Controller
 	*/
     public function logout()
     {
-    	session(null,MyConst::SESSION);
+    	session(MyConst::SESSION,null);
     	$this->redirect('sign/login');
     }
 

@@ -3,7 +3,11 @@
 	<div id='app'>
 		<p>{{message}}</p>
 		<button v-on:click='test'>{{button}}</button>
-		<div v-html="rawHtml"></div	
+		<ul v-for="ul">
+			{volist name="data" id="v"}
+				<li><a href="{:url('index/tables',['database'=>$v])}">{$v}</a></li>
+			{/volist}	
+		</ul>	
 	</div>
 {/block}
 {block name="js"}
@@ -15,21 +19,13 @@
 			button:'click me!',
 			msg:"change it!",
 			rawHtml:`<button v-on:click='hhh'>12345</button>`,
+			ul:''
 		},
 		methods:{
 			test(){
 				this.message = this.msg
 			},
-			hhh(){
-				alert(this.message)
-			}
 		},
-		beforeCreate(){
-			alert(111)
-		},
-		created(){
-			alert(this.button)
-		}
 	})
 </script>
 {/block}
