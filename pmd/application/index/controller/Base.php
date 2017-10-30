@@ -56,7 +56,7 @@ class Base extends Controller
 		    	}
     			$this->database = $database;
     		}catch(\PDOException $e){
-    			$this->error('数据库不存在','index/index');
+    			$this->error('数据库不存在','index/index/index');
     		}
     	}
     	$this->assign([

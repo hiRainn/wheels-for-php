@@ -14,7 +14,7 @@ class Index extends Base
     		$data[] = $v['Database'];
     	}
     	$this->assign([
-            'data' => $data
+            'databases' => $data
         ]);
     	return $this->fetch();
     }
@@ -24,10 +24,10 @@ class Index extends Base
         try{
             $field = 'TABLE_NAME as name,TABLE_TYPE as type,ENGINE as engine,CREATE_TIME as create_at,UPDATE_TIME as update_at,TABLE_COMMENT as comment';
             $tables = Db::Query("select {$field} from information_schema.tables where table_schema = '{$this->database}'");
-        }catch(\PDOException $e)
-        {   
-            Db::getLastSql();
+        }catch(\PDOException $e){   
+            $this->error('数据库不存在',url('index/index/index'));
         }
+        cache('table',$tables);
         $this->assign([
             'tables'=>$tables
         ]);
@@ -45,8 +45,44 @@ class Index extends Base
             exit('表不存在');
         }
         $this->assign([
-                'detail' => $detail
+                'list' => $this->findPreAndNext($table),
+                'tablename' => $table,
+                'detail' => $detail,
+                'database'=>$this->database
             ]);
         return $this->fetch();
+    }
+
+    public function findPreAndNext($tablename)
+    {
+        if(!$tables = cache('table')){
+            try{
+                $field = 'TABLE_NAME as name,TABLE_TYPE as type,ENGINE as engine,CREATE_TIME as create_at,UPDATE_TIME as update_at,TABLE_COMMENT as comment';
+                $tables = Db::Query("select {$field} from information_schema.tables where table_schema = '{$this->database}'");
+            }catch(\PDOException $e){   
+                $this->error('数据库不存在',url('index/index/index'));
+            }
+            cache('table',$tables);
+        }
+        $list = [];
+        foreach($tables as $k => $v) {
+            if($v['name'] == $tablename) {
+                $list[] = $v['name'];
+                if($k != 0) {
+                    $list['pre'] = $tables[$k - 1]['name'];
+                }
+                if($k != count($tables) -1 ) {
+                    $list['next'] = $tables[$k + 1]['name'];
+                }  
+                break;
+            }
+           
+        }
+        return $list;
+    }
+
+    public function dumpIntoMDOneTable()
+    {
+        
     }
 }

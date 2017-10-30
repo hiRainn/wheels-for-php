@@ -3,8 +3,11 @@
 	<div id='app'>
 		<ul v-for="ul">
 			{volist name="tables" id="v"}
-				<li><a href="{:url('index/detail',['database'=>$database,'table'=>$v.name])}">{$v.name}</a></li>
-			{/volist}	
-		</ul>	
+				<li><a href="{:url('index/index/detail',['database'=>$database,'table'=>$v.name])}">{$v.name}</a></li>
+			{/volist}
+		</ul>
+		{if condition="$tables eq false"}
+			<span>当前数据库没有表数据!</span>
+		{/if}
 	</div>
 {/block}

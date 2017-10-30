@@ -1,31 +1,10 @@
 {extend name="public:base"}
 {block name="main"}
 	<div id='app'>
-		<p>{{message}}</p>
-		<button v-on:click='test'>{{button}}</button>
 		<ul v-for="ul">
-			{volist name="data" id="v"}
-				<li><a href="{:url('index/tables',['database'=>$v])}">{$v}</a></li>
+			{volist name="databases" id="v"}
+				<li><a href="{:url('index/index/tables',['database'=>$v])}">{$v}</a></li>
 			{/volist}	
 		</ul>	
 	</div>
-{/block}
-{block name="js"}
-<script type="text/javascript">
-	var vm = new Vue({
-		el:"#app",
-		data:{
-			message:'hello vue!',
-			button:'click me!',
-			msg:"change it!",
-			rawHtml:`<button v-on:click='hhh'>12345</button>`,
-			ul:''
-		},
-		methods:{
-			test(){
-				this.message = this.msg
-			},
-		},
-	})
-</script>
 {/block}
