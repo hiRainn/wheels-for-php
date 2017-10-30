@@ -13,17 +13,18 @@ class Base extends Controller
 	*/
     public function _initialize()
     {
+        parent::_initialize();
     	if(!in_array('PDO', get_loaded_extensions())){
     		exit('必须安装PDO扩展');
     	}
-	if(!session(MyConst::SESSION)) {
-   		$this->redirect('index/sign/login');
+
+    	if(!session(MyConst::SESSION)) {
+    		$this->redirect('index/sign/login');
     	}
     	if(!cache(MyConst::SESSION)) {
     		session(MyConst::SESSION, null);
     		$this->error('操作超时，请重新登录！',url('index/sign/login'));
     	}
-    	
     	$this->configDb();
     }
 

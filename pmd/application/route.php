@@ -9,11 +9,7 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 use think\Route;
-
-// Route::get('/','index/index/index');
-// Route::get('login','index/sign/login');
-// Route::get('logout','index/sign/logout');
-// Route::get('<database>','index/index/tables',[],['database'=>'\s']);
+Route::get('login','index/sign/login');
 
 return [
     '__pattern__' => [

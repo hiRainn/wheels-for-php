@@ -10,6 +10,7 @@ class Sign extends Controller
 
 	public function _initialize()
 	{
+		parent::_initialize();
 		if(!in_array('PDO', get_loaded_extensions())){
     		exit('必须安装PDO扩展');
     	}
