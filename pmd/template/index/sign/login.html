@@ -32,7 +32,7 @@
 <script src="__JS__/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
 	$(function(){
-		if(window.localStorage.getItem('hostname') != false) {
+		if(typeof window.localStorage.getItem('hostname') == 'string') {
 			$('#remember').attr('checked',true)
 			$("input[name='hostname']").val(window.localStorage.getItem('hostname'));
 			$("input[name='port']").val(window.localStorage.getItem('port'));
@@ -56,12 +56,10 @@
 					window.localStorage.clear();
 				}
 				else {
-					if(window.localStorage.getItem('hostname') == false) {
-						window.localStorage.setItem('hostname' ,data.hostname);
-						window.localStorage.setItem('port' ,data.hostport);
-						window.localStorage.setItem('username' ,data.username);
-						window.localStorage.setItem('password' ,data.password);
-					}
+					window.localStorage.setItem('hostname' ,data.hostname);
+					window.localStorage.setItem('port' ,data.hostport);
+					window.localStorage.setItem('username' ,data.username);
+					window.localStorage.setItem('password' ,data.password);
 				}
 				alert('登录成功！')
 				location.href="{:url('index/index/index')}"
