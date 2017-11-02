@@ -77,4 +77,38 @@ class Base extends Controller
     	}
     	$data = $tmp;
     }
+
+    /**
+    * 输出验证码 img标签的src直接指向地址
+    */
+    public function verify($id = 1)
+    {
+        $verify = new \org\Verify(array('length' => 4));
+        $verify->entry($id);
+    }
+
+    /**
+    * 验证码验证
+    */
+     public function checkVerify($code ,$time = 1800, $id = 1, $seKey = 'ThinkPHP.CN')
+   {
+       $key = substr(md5($seKey), 5, 8);
+       $str = substr(md5($seKey), 8, 10);
+       $key = md5($key . $str).$id;
+
+       $code = strtoupper($code);
+       $code_key = substr(md5($seKey), 5, 8);
+       $code_str = substr(md5($code), 8, 10);
+       $code = md5($code_key . $code_str);
+
+       $secode = session($key);
+       if($secode['verify_time'] + $time < time()){
+           return ['code'=>0,'msg'=>'验证码超时'];
+       }
+       if($secode['verify_code'] != $code) {
+           return ['code'=>0,'msg'=>'验证码错误'];
+       }
+       return ['code'=>1,'msg'=>'success'];
+
+   }
 }
