@@ -40,7 +40,8 @@ class Index extends Base
         try{
             $field ='COLUMN_NAME as col_name,COLUMN_DEFAULT as default_data,DATA_TYPE as data_type,IS_NULLABLE as is_null,COLUMN_COMMENT as col_comment,COLUMN_KEY as index_key';
             $detail = Db::query("select {$field} from INFORMATION_SCHEMA.Columns where table_name='{$table}'");
-           
+            
+            $index = Db::query("SHOW index FROM {$table}");
         }catch(\PDOException $e){
             exit('表不存在');
         }
@@ -48,6 +49,7 @@ class Index extends Base
                 'list' => $this->findPreAndNext($table),
                 'tablename' => $table,
                 'detail' => $detail,
+                'index' => !empty($index)?$index:[],
                 'database'=>$this->database
             ]);
         return $this->fetch();

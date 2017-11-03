@@ -17,6 +17,7 @@ class Base extends Controller
     	if(!in_array('PDO', get_loaded_extensions())){
     		exit('必须安装PDO扩展');
     	}
+        header('Access-Control-Allow-Origin:htts://Access-Control-Allow-Origin;');
 
     	if(!session(MyConst::SESSION)) {
     		$this->redirect('index/sign/login');
@@ -76,4 +77,5 @@ class Base extends Controller
     	}
     	$data = $tmp;
     }
+
 }
