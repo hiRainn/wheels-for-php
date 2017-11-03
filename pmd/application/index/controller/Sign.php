@@ -22,7 +22,7 @@ class Sign extends Controller
     public function login()
     {
     	if(session(MyConst::SESSION)){
-    		$this->redirect('index/index');
+    		$this->redirect('index/index/index');
     	}
        return $this->fetch();
     }

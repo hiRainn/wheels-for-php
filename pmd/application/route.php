@@ -15,6 +15,7 @@ Route::get('logout','index/sign/logout');
 Route::get(':database','index/index/tables');
 Route::get('/','index/index/index');
 
+
 return [
     '__pattern__' => [
         'name' => '\w+',
