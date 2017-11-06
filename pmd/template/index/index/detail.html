@@ -27,6 +27,7 @@
 		<table class="table table-bordered .col-xs-12">
 			<caption>索引信息</caption>
 			<thead>
+				<th>表名</th>
 				<th>列名</th>
 				<th>索引名称</th>
 				<th>索引序列号</th>
@@ -43,6 +44,7 @@
 			<tbody>
 				{volist name="index" id="i"}
 					<tr>
+						<th>{$i.Table}</th>
 						<th>{$i.Column_name}</th>
 						<th>{$i.Key_name}</th>
 						<th>{$i.Seq_in_index}</th>

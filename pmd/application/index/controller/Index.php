@@ -52,6 +52,7 @@ class Index extends Base
             }
             foreach($index as &$v) {
                 $v['Collation'] = ($v['Collation'] == 'A')?'A(升序)':'无分序';
+                $v['Non_unique'] = ($v['Non_unique'] == 0)?'NO':'YES';
             } 
         }catch(\PDOException $e){
             exit('表不存在');
