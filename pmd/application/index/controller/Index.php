@@ -42,6 +42,17 @@ class Index extends Base
             $detail = Db::query("select {$field} from INFORMATION_SCHEMA.Columns where table_name='{$table}'");
             
             $index = Db::query("SHOW index FROM {$table}");
+            foreach ($detail as $key => $value) {
+                if($value['default_data'] === NULL){
+                    $detail[$key]['default_data'] = 'null';
+                }
+                elseif($value['default_data'] === '') {
+                    $detail[$key]['default_data'] = "''";
+                }
+            }
+            foreach($index as &$v) {
+                $v['Collation'] = ($v['Collation'] == 'A')?'A(升序)':'无分序';
+            } 
         }catch(\PDOException $e){
             exit('表不存在');
         }

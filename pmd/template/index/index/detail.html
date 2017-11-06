@@ -27,22 +27,34 @@
 		<table class="table table-bordered .col-xs-12">
 			<caption>索引信息</caption>
 			<thead>
-				<th>字段名</th>
-				<th>数据类型</th>
+				<th>列名</th>
+				<th>索引名称</th>
+				<th>索引序列号</th>
+				<th>分序</th>
+				<th>索引长度</th>
+				<th>压缩方式</th>
 				<th>是否null</th>
-				<th>默认值</th>
-				<th>索引</th>
-				<th>注释</th>
+				<th>是否重复</th>
+				<th>唯一值数目估计值</th>
+				<th>索引方法</th>
+				<th>列中描述索引信息</th>
+				<th>索引注释</th>
 			</thead>
 			<tbody>
-				{volist name="detail" id="d"}
+				{volist name="index" id="i"}
 					<tr>
-						<th>{$d.col_name}</th>
-						<th>{$d.data_type}</th>
-						<th>{$d.is_null}</th>
-						<th>{$d.default_data}</th>
-						<th>{$d.index_key}</th>
-						<th>{$d.col_comment}</th>
+						<th>{$i.Column_name}</th>
+						<th>{$i.Key_name}</th>
+						<th>{$i.Seq_in_index}</th>
+						<th>{$i.Collation}</th>
+						<th>{$i.Sub_part|default='null'}</th>
+						<th>{$i.Packed|default='null'}</th>
+						<th>{$i.Null|default='NO'}</th>
+						<th>{$i.Non_unique}</th>
+						<th>{$i.Cardinality}</th>
+						<th>{$i.Index_type}</th>
+						<th>{$i.Comment}</th>
+						<th>{$i.Index_comment}</th>
 					</tr>
 				{/volist}
 			</tbody>
