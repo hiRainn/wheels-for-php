@@ -1,10 +1,50 @@
 {extend name="public:base"}
 {block name="main"}
 	<div id='app'>
-		<ul v-for="ul">
-			{volist name="tables" id="v"}
-				<li><a href="{:url('index/index/detail',['database'=>$database,'table'=>$v.name])}">{$v.name}</a></li>
+		<table class="table table-bordered .col-xs-12">
+			<thead>
+				<th>表名</th>
+				<th>表类型</th>
+				<th>行格式</th>
+				<th>数据量(行)</th>
+				<th>数据长度</th>
+				<th>索引长度</th>
+				<th>空间碎片</th>
+				<th>自增主键当前值</th>
+				<th>检查时间</th>
+				<th>更新时间</th>
+				<th>创建时间</th>
+				<th>引擎</th>
+				<th>字符校验编码</th>
+				<th>创建选项</th>
+				<th>注释</th>	
+				<th>操作</th>
+			</thead>
+			<tbody>
+				{volist name="tables" id="v"}
+				<tr>
+					<th><a href="{:url('index/index/detail',['database'=>$database,'table'=>$v.name])}">{$v.name}</a></th>
+					<th>{$v.type}</th>
+					<th>{$v.format}</th>
+					<th>{$v.rows}</th>
+					<th>{$v.Data_length}</th>
+					<th>{$v.Index_length}</th>
+					<th>{$v.Data_free}</th>
+					<th>{$v.Auto_increment}</th>
+					<th>{$v.Check_time}</th>
+					<th>{$v.update_at}</th>
+					<th>{$v.create_at}</th>
+					<th>{$v.engine}</th>
+					<th>{$v.Table_collation}</th>
+					<th>{$v.Create_options}</th>
+					<th>{$v.comment}</th>
+					<th>导出</th>
+				</tr>
 			{/volist}
+			</tbody>
+		</table>
+		<ul v-for="ul">
+			
 		</ul>
 		{if condition="$tables eq false"}
 			<span>当前数据库没有表数据!</span>

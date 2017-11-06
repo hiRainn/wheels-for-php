@@ -22,14 +22,16 @@ class Index extends Base
     public function tables()
     {
         try{
-            $field = 'TABLE_NAME as name,TABLE_TYPE as type,ENGINE as engine,CREATE_TIME as create_at,UPDATE_TIME as update_at,TABLE_COMMENT as comment';
+            $field = 'TABLE_NAME as name,TABLE_TYPE as type,ENGINE as engine,CREATE_TIME as create_at,UPDATE_TIME as update_at,TABLE_COMMENT as comment,Table_rows as rows,Row_format as format,Index_length,Check_time,Data_length,Auto_increment,Data_free,Table_collation,Create_options';
             $tables = Db::Query("select {$field} from information_schema.tables where table_schema = '{$this->database}'");
         }catch(\PDOException $e){   
             $this->error('数据库不存在',url('index/index/index'));
         }
         cache('table',$tables);
         $this->assign([
-            'tables'=>$tables
+            'tablename' => $this->database,
+            'tables'=>$tables,
+            'info' => $this->database,
         ]);
         return $this->fetch();
     }
@@ -58,6 +60,7 @@ class Index extends Base
             exit('表不存在');
         }
         $this->assign([
+                'info' => $this->database. '.' .request()->param('table'),
                 'list' => $this->findPreAndNext($table),
                 'tablename' => $table,
                 'detail' => $detail,
@@ -95,8 +98,8 @@ class Index extends Base
         return $list;
     }
 
-    public function dumpIntoMDOneTable()
+    public function dump()
     {
-        
+        dump($info);
     }
 }

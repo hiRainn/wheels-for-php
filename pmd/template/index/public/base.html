@@ -105,7 +105,7 @@
                       {notempty name='$list.next'}
                       <a href="{:url('index/index/detail',['database'=>$database,'table'=>$list.next])}">下一张表</a>
                       {/notempty}
-                      
+                      <a href="{:url('index/index/dump',['info'=>$info])}" style="float: right;">导出</a>
                   </header>
                   <div class="panel-body">
                      {block name="main"}
