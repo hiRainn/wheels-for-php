@@ -17,7 +17,6 @@ class Base extends Controller
     	if(!in_array('PDO', get_loaded_extensions())){
     		exit('必须安装PDO扩展');
     	}
-        header('Access-Control-Allow-Origin:htts://Access-Control-Allow-Origin;');
 
     	if(!session(MyConst::SESSION)) {
     		$this->redirect('index/sign/login');
@@ -26,10 +25,11 @@ class Base extends Controller
     		session(MyConst::SESSION, null);
     		$this->error('操作超时，请重新登录！',url('index/sign/login'));
     	}
+        defined('DUMP_PATH') or define('DUMP_PATH', ROOT_PATH . 'public' . DS . 'static' . DS . 'dump' . DS);
     	$this->configDb();
     }
 
-    public function empty()
+    public function _empty()
     {
     	$this->redirect('/');
     }
