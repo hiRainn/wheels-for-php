@@ -14,6 +14,7 @@ class Index extends Base
     		$data[] = $v['Database'];
     	}
     	$this->assign([
+            'info' => '',
             'databases' => $data
         ]);
     	return $this->fetch();
@@ -41,7 +42,7 @@ class Index extends Base
         $table = request()->param('table');
         try{
             $field ='COLUMN_NAME as col_name,COLUMN_DEFAULT as default_data,DATA_TYPE as data_type,IS_NULLABLE as is_null,COLUMN_COMMENT as col_comment,COLUMN_KEY as index_key';
-            $detail = Db::query("select {$field} from INFORMATION_SCHEMA.Columns where table_name='{$table}'");
+            $detail = Db::query("select {$field} from INFORMATION_SCHEMA.Columns where table_name='{$table}' and table_schema= '{$this->database}'");
             
             $index = Db::query("SHOW index FROM {$table}");
             foreach ($detail as $key => $value) {
@@ -60,7 +61,7 @@ class Index extends Base
             exit('表不存在');
         }
         $this->assign([
-                'info' => $this->database. '.' .request()->param('table'),
+                'info' => $this->database. '-' .request()->param('table'),
                 'list' => $this->findPreAndNext($table),
                 'tablename' => $table,
                 'detail' => $detail,
@@ -100,6 +101,9 @@ class Index extends Base
 
     public function dump()
     {
-        dump($info);
+        $type = request()->param('type','','htmlentities');
+        if(!in_array($type, ['markdown','excel'])) {
+            return "非法请求";
+        }
     }
 }
