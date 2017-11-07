@@ -14,6 +14,7 @@ class Index extends Base
     		$data[] = $v['Database'];
     	}
     	$this->assign([
+            'info' => '',
             'databases' => $data
         ]);
     	return $this->fetch();
@@ -60,7 +61,7 @@ class Index extends Base
             exit('表不存在');
         }
         $this->assign([
-                'info' => $this->database. '.' .request()->param('table'),
+                'info' => $this->database. '-' .request()->param('table'),
                 'list' => $this->findPreAndNext($table),
                 'tablename' => $table,
                 'detail' => $detail,
@@ -100,6 +101,9 @@ class Index extends Base
 
     public function dump()
     {
-        dump($info);
+        $type = request()->param('type','','htmlentities');
+        if(!in_array($type, ['markdown','excel'])) {
+            return "非法请求";
+        }
     }
 }
