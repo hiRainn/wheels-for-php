@@ -4,7 +4,7 @@ use think\Db;
 
 class Index extends Base
 {
-    protected $zipType = '.md';
+    protected $zipType = '.zip';
     /**
     * 主页
     */
@@ -118,6 +118,7 @@ class Index extends Base
     public function dump()
     {
         set_time_limit(0);
+        ini_set('zlib.output_compression', 'Off');
         $table = request()->param('table','','htmlspecialchars');
         if($table !== '') {
             try{ 
@@ -135,7 +136,7 @@ class Index extends Base
         }
 
         if($this->FileExists($table)) {
-            return "<script>location.href='$path'</script>";
+            return "<script>location.href='$path';</script>";
         }
       
         // header('Content-Type: text/event-stream'); // 以事件流的形式告知浏览器进行显示
@@ -143,11 +144,14 @@ class Index extends Base
         header("Content-type:text/html;charset=utf-8");
         header('X-Accel-Buffering: no');           // 关闭加速缓冲
         set_time_limit(0);
-        echo '正在生成文件中，成功后将自动下载，请等待。。。';
+        echo '系统暂不支持整库压缩下载，整库的数据字典文件会在对应的/static/dump/hostname/database下，表列表为index.md，单表导出则自动下载';
+        echo '<br>';
+        echo '正在生成文件中，请等待。。。';
         ob_flush();
         flush();
         $this->makeDownFile($table);
-        return "<script>location.href='$path'</script>";
+        echo '<br>';
+        echo "完成文件生成!";
     }
 
     protected function makeDownFile($table = '')
@@ -249,4 +253,5 @@ DAT;
             return is_file(DUMP_PATH . $this->hostname . DS . $this->database . DS . $table . '.md');
         }
     }
+
 }
