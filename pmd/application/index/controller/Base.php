@@ -26,6 +26,8 @@ class Base extends Controller
     		$this->error('操作超时，请重新登录！',url('index/sign/login'));
     	}
         defined('DUMP_PATH') or define('DUMP_PATH', ROOT_PATH . 'public' . DS . 'static' . DS . 'dump' . DS);
+        $database = request()->param('database','','htmlspecialchars');
+        $table = request()->param('table','','htmlspecialchars');
     	$this->configDb();
     }
 
@@ -44,6 +46,7 @@ class Base extends Controller
     	foreach($db_config as $k => $v) {
     		config('database.' . $k, $v);
     	} 
+        $this->hostname = $db_config['hostname'];
 
     	if($database = request()->param('database','','htmlspecialchars')) {
     		config('database.database',$database);

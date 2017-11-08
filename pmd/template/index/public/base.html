@@ -106,9 +106,8 @@
                       <a href="{:url('index/index/detail',['database'=>$database,'table'=>$list.next])}">下一张表</a>
                       {/notempty}
                       {notempty name='info'}
-                      <a target="_blank" id="dump" style="float: right;margin-left: 10px;" href="/dump/markdown/{$info}">导出</a>
-                      <span style="float: right;margin-left: 10px;"><input type="radio" name="dump" value="excel">excel</span>
-                      <span style="float: right;margin-left: 10px;"><input type="radio" name="dump" checked value="markdown">markdown</span>
+                      <a target="_blank" id="dump" style="float: right;margin-left: 10px;" href="/dump/{$info}">MarkDown导出</a>
+                      
                       {/notempty}
                   </header>
                   <div class="panel-body">
@@ -147,10 +146,6 @@
       $(function() {
         //    fancybox
           jQuery(".fancybox").fancybox();
-          $('input[name="dump"]').on('change',function(){
-              var type = $('input[name="dump"]:checked').val();
-              $('#dump').attr('href','/dump/'+type+"/{$info}");
-          })
       });
 
   </script>
