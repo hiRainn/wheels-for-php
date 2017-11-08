@@ -138,13 +138,12 @@ class Index extends Base
         if($this->FileExists($table)) {
             return "<script>location.href='$path';</script>";
         }
-      
-        // header('Content-Type: text/event-stream'); // 以事件流的形式告知浏览器进行显示
+  
         header('Cache-Control: no-cache');         // 告知浏览器不进行缓存
         header("Content-type:text/html;charset=utf-8");
         header('X-Accel-Buffering: no');           // 关闭加速缓冲
         set_time_limit(0);
-        echo '系统暂不支持整库压缩下载，整库的数据字典文件会在对应的/static/dump/hostname/database下，表列表为index.md，单表导出则自动下载';
+        echo '暂不支持Windows环境下整库打包下载，整库的数据字典文件会在对应的/static/dump/hostname/database下，表集合文件为index.md，单表导出则自动下载';
         echo '<br>';
         echo '正在生成文件中，请等待。。。';
         ob_flush();
@@ -152,6 +151,7 @@ class Index extends Base
         $this->makeDownFile($table);
         echo '<br>';
         echo "完成文件生成!";
+        return "<script>location.href='$path';</script>";
     }
 
     protected function makeDownFile($table = '')
@@ -254,4 +254,25 @@ DAT;
         }
     }
 
+    protected function tarFile()
+    {
+        $path = DUMP_PATH . $this->hostname;
+        $tar = $this->database . $this->zipType;
+        //windows
+        if(in_array(PHP_OS, ['WINNT','WIN32','Windows'])) {
+            return false;
+        }
+        //macOs
+        elseif (PHP_OS === 'Darwin') {        
+            exec("cd $path")
+            exec("tar -cvf $tar {$this->database}");
+            return true;
+        }
+        //Linux&Unix
+        else {
+            exec("cd $path")
+            exec("tar -cvf $tar {$this->database}");
+            return true;
+        }
+    }
 }
