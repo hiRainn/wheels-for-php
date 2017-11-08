@@ -264,13 +264,13 @@ DAT;
         }
         //macOs
         elseif (PHP_OS === 'Darwin') {        
-            exec("cd $path")
+            exec("cd $path");
             exec("tar -cvf $tar {$this->database}");
             return true;
         }
         //Linux&Unix
         else {
-            exec("cd $path")
+            exec("cd $path");
             exec("tar -cvf $tar {$this->database}");
             return true;
         }
