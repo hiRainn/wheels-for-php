@@ -416,7 +416,9 @@ var Tags;
 				this.tag_array.pop();
 				this.add_status = 1;
 				this.tag_number --;
-				$('#'+TAG_CONFIG['input-id']).attr('placeholder','还可以添加' + (parseInt(TAG_CONFIG['max-tags']) - this.tag_number) + '个标签');
+				if(TAG_CONFIG['max-tags'] != 0) {
+					$('#'+TAG_CONFIG['input-id']).attr('placeholder','还可以添加' + (parseInt(TAG_CONFIG['max-tags']) - this.tag_number) + '个标签');
+				}
 			}
 		}
 
