@@ -1,1 +1,1 @@
-the data pass to front must be include the columns 'id','parent_id','name' and 'level'
+the data is passed to front must include the columns 'id','parent_id','name' and 'level'
