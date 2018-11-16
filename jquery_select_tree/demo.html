@@ -1,0 +1,314 @@
+@extends('behind.layout.iframe')
+
+@section('content')
+    <style>
+        table {
+            font-size: 100%;
+        }
+    </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>{{$page_title}}
+                            <small>分类，查找</small>
+                        </h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">选项1</a>
+                                </li>
+                                <li><a href="#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <button type="button" class="btn btn-primary pull-right add" >
+                            新增分类
+                        </button>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr style="text-align: center !important;">
+                                <th>id</th>
+                                <th>名称</th>
+                                <th>所属分类</th>
+                                <th>描述</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($data as $v)
+                                <tr>
+                                    <td>
+                                        {{$v['id']}}
+                                    </td>
+                                    <td>
+                                        {{$v['name']}}
+                                    </td>
+                                    <td>
+                                        {{$v['parent']}}
+                                    </td>
+                                    <td>
+                                        {{$v['info']}}
+                                    </td>
+                                    <td>
+                                        {{$v['status']}}
+                                    </td>
+                                    <td>
+                                        <button type="button" id="edit" json-data="{{$v['json']}}" class="btn btn-primary btn-sm edit">编辑</button>
+                                        <button type="button" id="del" del-id="{{$v['id']}}" del-msg="{{$v['status']=='不可用'?'恢复':'删除'}}" class="btn btn-primary btn-sm">{{$v['status']=='不可用'?'恢复':'删除'}}</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="modal inmodal fade" id="myModal5" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                                class="sr-only">Close</span></button>
+                    <h6 class="modal-title"><span id="title"></span></h6>
+                </div>
+                <small class="font-bold">
+                    <div class="modal-body">
+                        <form id="add_form">
+                            <input type="hidden" id="id" name="id">
+                            <div class="form-group">
+                                <label for="name">请输入分类名称:</label>
+                                <input type="text" name="name" id="name" class="form-control">
+                            </div>
+                            <div class="form-group" id="select_div">
+                                <label>请选择分类名称:</label>
+                                <input type="hidden" id="parent_id" name="parent_id">
+
+                            </div>
+                            <div class="form-group">
+                                <label for="info">详情:</label>
+                                <textarea name="info" id="info" class="form-control"></textarea>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary submit_ok">确认</button>
+                    </div>
+                </small>
+            </div>
+            <small class="font-bold">
+            </small>
+        </div>
+        <small class="font-bold">
+        </small>
+    </div>
+    <input type="hidden" id="json_list" value="{{$type_list}}">
+    <input type="hidden" id="json_type" value="{{$json_type}}">
+
+@endsection
+
+@section('js')
+    {{--<script src="{{asset('js/vue.js')}}?v=1.0.0"></script>--}}
+    <script src="{{asset('js/plugins/jeditable/jquery.jeditable.js')}}"></script>
+
+    <!-- Data Tables -->
+    <script src="{{asset('js/plugins/dataTables/jquery.dataTables.js')}}"></script>
+    <script src="{{asset('js/plugins/dataTables/dataTables.bootstrap.js')}}"></script>
+
+    <!-- 自定义js -->
+    <script src="{{asset('js/content.js')}}?v=1.0.0"></script>
+    <script>
+        function decodeUnicode(str) {
+            str = str.replace(/\\/g, "%");
+            return unescape(str);
+        }
+        $(function(){
+            var type_data = JSON.parse($('#json_type').val());
+            $('.add').click(function(){
+                $('#add_form')[0].reset();
+                $('#title').html('新增分类');
+                $('.select_div select').remove();
+                var select = create_select(type_data,1);
+                $('#select_div').append(select);
+
+                $('#myModal5').modal();
+            })
+
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+            $('#del').on('click',function(){
+                var del_id = $(this).attr('del-id');
+                var del_msg = $(this).attr('del-msg');
+                var index = layer.msg('是否确认'+ del_msg + '?', {
+                    btn: ['确定','取消'], //按钮
+                    yes:function(){
+                        var data = {id:del_id};
+                        var url = 'del_business_type'
+                        $.post(url,data,function(res){
+                            if(res.code === 0) {
+                                layer.msg('操作成功',{
+                                    time:1000,
+                                    end:function(){
+                                        window.location.reload();
+                                    }
+                                })
+                            }
+                            else {
+                                layer.msg(res.msg)
+                            }
+                        },'json')
+                    },
+                    btn2:function() {
+                        layer.close(index);
+                    }
+                });
+            })
+            $(document).on('change','.select_group',function(){
+                var parent_id = $(this).val();
+                $(this).nextAll('select').remove();
+                //子类二级选择option为0时 删除所有下级兄弟元素，并且判断上级是否存在select
+                if(parent_id == false) {
+                   parent_id = $(this).prev('select').val();
+                   if(typeof parent_id == 'undefined') {
+                       parent_id = 0;
+                   }
+                }
+                else {
+                    var cla = $(this).attr('class');
+                    cla = cla.split(' ');
+                    cla = cla.pop();
+                    cla = cla.split('_');
+                    var level = cla.pop();
+                    var select = create_select(type_data,parseInt(level) + 1,parent_id);
+                    $('#select_div').append(select);
+                }
+                $('#parent_id').val(parent_id);
+            })
+
+            $('.edit').click(function(){
+                var json = JSON.parse($(this).attr('json-data'))
+                console.log(json)
+                $('#add_form')[0].reset();
+                $('#id').val(json.id);
+                $('#info').html(json.info)
+                $('#name').val(json.name)
+                $('#title').html('编辑分类');
+                $('#select_div').children('select').remove();
+
+                //定位分类
+                var parent_id_list = json.parent_id_list
+                parent_id_list.reverse()
+                if(parent_id_list == false) {
+                    var select = create_select(type_data,1);
+                    $('#select_div').append(select);
+                }
+                else {
+                    var level = 0
+                    for(var p in parent_id_list){
+                        level = level+1
+                        var parent_id = 0
+                        if(parseInt(p) === 0) {
+                            parent_id = 0
+                        }else {
+                            parent_id = parseInt(parent_id_list[parseInt(p)-1]);
+                        }
+                        var select = create_select(type_data,level,parent_id);
+                        $(select).val(parent_id_list[p])
+                        $('#select_div').append(select);
+                        $('#parent_id').val(parent_id);
+                    }
+                    var select = create_select(type_data,level+1,parent_id_list.pop());
+                    $('#select_div').append(select);
+                }
+                $('#myModal5').modal();
+            })
+
+            $('.submit_ok').click(function(){
+                var data = $('#add_form').serializeArray();
+                $.ajax({
+                    url:'add_business',
+                    data:data,
+                    dataType:'json',
+                    type:'post',
+                    beforeSend:function(){
+                        load = layer.load(1, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                    },
+                    success:function(res) {
+                        if(res.code === 0) {
+                            layer.msg('操作成功',{
+                                time:2000,
+                                end:function(){
+                                    window.location.reload();
+                                }
+                            })
+                        }
+                        else {
+                            layer.msg(res.msg)
+                        }
+                    },
+                    complete:function(){
+                        layer.close(load);
+                    }
+                })
+
+            })
+
+            function create_select(obj,level,parent_id = 0) {
+                var select = document.createElement('select');
+                $(select).addClass('form-control');
+                $(select).attr('name','parent_group');
+                $(select).addClass('select_group');
+                $(select).addClass('level_'+level)
+                var opt = document.createElement('option');
+                $(opt).attr('value','0');
+                $(opt).html('请选择');
+                $(select).append(opt);
+                var ok = false;
+                for(var p in obj) {
+                    if(obj[p].level == level && obj[p].parent_id == parent_id) {
+                        opt = document.createElement('option');
+                        $(opt).attr('value',obj[p].id);
+                        $(opt).html(obj[p].name);
+                        $(select).append(opt);
+                        ok = true;
+                    }
+                }
+                if(ok) {
+                    return select;
+                }
+                else {
+                    return '';
+                }
+
+            }
+
+
+        })
+
+    </script>
+
+
+@endsection
