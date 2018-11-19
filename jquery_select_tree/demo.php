@@ -75,7 +75,7 @@ class BusinessController extends BaseController
                 return ['code'=>1,'msg'=>'分类不能属于自己的子类！'];
             }
             //重新设置level
-            $level = DB::table('business_type')->where(['parent_id'=>$data['parent_id']])->value('level') + 1;
+            $level = DB::table('business_type')->where(['id'=>$data['parent_id']])->value('level') + 1;
             $data['level'] = $level;
 
             $res = Db::table('business_type')->where(['id'=>$id])->update($data);
@@ -91,7 +91,7 @@ class BusinessController extends BaseController
             if(DB::table('business_type')->where('name','=',$data['name'])->first()) {
                 return ['code'=>1,'msg'=>'该名称已存在'];
             }
-            $level = DB::table('business_type')->where(['parent_id'=>$data['parent_id']])->value('level') + 1;
+            $level = DB::table('business_type')->where(['id'=>$data['parent_id']])->value('level') + 1;
             $data['level'] = $level;
             $res = DB::table('business_type')->insert($data);
             if($res) {
